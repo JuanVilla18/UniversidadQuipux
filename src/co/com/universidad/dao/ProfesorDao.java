@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class ProfesorDao {
     
 //Declaramos un ArrayList estatico que funcionara como una simulacion de la base de datos
-    public static ArrayList<Profesor> listaProfesores = new ArrayList<>();
+    private static ArrayList<Profesor> listaProfesores = new ArrayList<>();
     
 //Metodo que permite crear un profesor por medio de el parametro recibido (entidad: Profesor)
     public void crearProfesor(Profesor profesor){

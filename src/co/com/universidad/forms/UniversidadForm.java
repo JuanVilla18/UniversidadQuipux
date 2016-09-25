@@ -109,7 +109,7 @@ public class UniversidadForm extends javax.swing.JFrame {
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         this.setVisible(false);
-        ProfesorForm PF = new ProfesorForm();
+        ProfesorForm1 PF = new ProfesorForm1();
         PF.setVisible(true);
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 

@@ -3,7 +3,7 @@ package co.com.universidad.model;
 
 import java.util.ArrayList;
 
-
+//Entidad: EstudianteMateria
 public class EstudianteMateria {
     
 //Instanciamos las entidades nesesarias para implementar nuestros Getters and Setters

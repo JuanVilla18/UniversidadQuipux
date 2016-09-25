@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class MateriaDao {
     
 //Declaramos un ArrayList estatico que funcionara como una simulacion de la base de datos
-    public static ArrayList<Materia> listaMaterias = new ArrayList<>();
+    private static ArrayList<Materia> listaMaterias = new ArrayList<>();
     
 //Metodo que permite crear una materia por medio de el parametro recibido (entidad: Materia)
     public void crearMateria(Materia materia){

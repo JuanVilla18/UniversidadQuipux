@@ -5,10 +5,10 @@ import co.com.universidad.model.Estudiante;
 import java.util.ArrayList;
 
 //Clase dao para estudiante
-public class EstudianteDao {
-    
+public class EstudianteDao{
+
 //Declaramos un ArrayList estatico que funcionara como una simulacion de la base de datos
-    public static ArrayList<Estudiante> listaEstudiantes = new ArrayList<>();
+    private static ArrayList<Estudiante> listaEstudiantes = new ArrayList<>();
     
 //Metodo que permite crear un estudiante por medio del parametro recibido (entidad: Estudiante)
     public void crearEstudiante(Estudiante estudiante){

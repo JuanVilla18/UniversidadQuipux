@@ -2,7 +2,7 @@
 package co.com.universidad.model;
 
 
-//La clase profesor hereda de la clase persona
+//Entidad: Profesor - La clase profesor hereda de la clase persona
 public class Profesor extends Persona{
     
 //Instanciamos la clase materia para asignarsela a el profesor

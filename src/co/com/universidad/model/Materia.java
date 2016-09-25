@@ -1,7 +1,7 @@
 
 package co.com.universidad.model;
 
-
+//Entidad: Materia
 public class Materia {
     
 //Declaramos los atributos nesesarios para una materia
@@ -49,5 +49,5 @@ public class Materia {
     public void setCreditos(int creditos) {
         this.creditos = creditos;
     }
-
+    
 }

@@ -1,7 +1,7 @@
 
 package co.com.universidad.model;
 
-//La clase persona puede extender a otras clases
+//Entidad: Persona - La clase persona puede extender a otras clases
 public class Persona {
     
 //Agregamos atributos a la entidad (Los atributos son privados y los metodos para Getter and Setter publicos)

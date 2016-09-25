@@ -1,10 +1,7 @@
 
 package co.com.universidad.model;
 
-import java.util.ArrayList;
-
-
-//La clase estudiante hereda de la clase persona
+//Entidad: Estudiante - La clase estudiante hereda de la clase persona
 public class Estudiante extends Persona {
     
 //Declaramos los atributos nesesarios

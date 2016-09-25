@@ -11,7 +11,7 @@ import co.com.universidad.model.Materia;
 import co.com.universidad.model.Profesor;
 import java.util.ArrayList;
 
-
+//Clase manager que se encarga de controlar toda la logica que se dirigue al dao
 public class UniversidadManager {
     
 //Instanciamos las clases Dao para usarlas posteriormente
