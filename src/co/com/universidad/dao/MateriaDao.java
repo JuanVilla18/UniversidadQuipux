@@ -8,7 +8,8 @@ import java.util.ArrayList;
 public class MateriaDao {
     
 //Declaramos un ArrayList estatico que funcionara como una simulacion de la base de datos
-    private static ArrayList<Materia> listaMaterias = new ArrayList<>();
+    public static ArrayList<Materia> listaMaterias = new ArrayList<>();
+
     
 //Metodo que permite crear una materia por medio de el parametro recibido (entidad: Materia)
     public void crearMateria(Materia materia){
@@ -20,6 +21,20 @@ public class MateriaDao {
         Materia materia = new Materia();
         for(int i = 0; i<listaMaterias.size(); i++){
             if(listaMaterias.get(i).getCodigo() == codigoMateria){
+                materia.setCodigo(listaMaterias.get(i).getCodigo());
+                materia.setNombre(listaMaterias.get(i).getNombre());
+                materia.setDescripcion(listaMaterias.get(i).getDescripcion());
+                materia.setCreditos(listaMaterias.get(i).getCreditos());
+            }
+        }
+        return materia;
+    }
+ 
+    //Metodo que permite buscar una materia por medio de el parametro recibido(String: nombre de la materia)
+    public Materia buscarMateria(String nombre){
+        Materia materia = new Materia();
+        for(int i = 0; i<listaMaterias.size(); i++){
+            if(listaMaterias.get(i).getNombre().equals(nombre)){
                 materia.setCodigo(listaMaterias.get(i).getCodigo());
                 materia.setNombre(listaMaterias.get(i).getNombre());
                 materia.setDescripcion(listaMaterias.get(i).getDescripcion());

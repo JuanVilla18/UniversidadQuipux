@@ -5,47 +5,94 @@
  */
 package co.com.universidad.forms;
 
+import co.com.universidad.dao.MateriaDao;
 import co.com.universidad.manager.UniversidadManager;
+import co.com.universidad.manager.Validaciones;
 import co.com.universidad.model.Materia;
+import co.com.universidad.model.Profesor;
 import java.awt.Color;
 import java.awt.MouseInfo;
 import java.awt.Point;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Juan
  */
-public class ProfesorForm extends javax.swing.JFrame {
+public class ProfesorForm extends Crud {
 
     private static final long serialVersionUID = 1L;
 
-    private String numeroDocumento, nombres;
-    
+    private String numeroDocumento, nombres, nombreMateria;
+
     private int x;
     private int y;
-    
+
     private UniversidadManager UM = new UniversidadManager();
-    private Materia mat = new Materia();
-    
+    private Materia materia = new Materia();
+    private MateriaDao materiaDao = new MateriaDao();
+    private Profesor profesor = new Profesor();
+
+    Icon icoAdvertencia = new ImageIcon(getClass().getResource("../imagenes/medium_priority.png"));
+    Icon icoError = new ImageIcon(getClass().getResource("../imagenes/high_priority.png"));
+
+    private ArrayList<Materia> listaMaterias = new ArrayList<>();
+
     /**
      * Creates new form ProfesorForm
      */
-    
     public ProfesorForm() {
-        
-        Color c = new Color(0,0,0);
-        
+
+        Color c = new Color(0, 0, 0);
+
         initComponents();
-        
+
+        UM.crearMateria(12, "mat1", "desc", 12);
+        UM.crearMateria(13, "mat2", "desc", 12);
+
         this.setLocationRelativeTo(null);
-        
+
         jTextField1.setBorder(BorderFactory.createLineBorder(c));
+        jTextField1.addKeyListener(new KeyAdapter() {//Este campo es de solo numeros y por lo tanto no es permitido caractenes A-Z, se bloquea el teclado numerico para que el usuario no pueda ingresar letras
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c;
+                c = e.getKeyChar();
+                if ((c < '0' || c > '9')) {
+                    e.consume();
+                }
+            }
+        });
+
         jTextField2.setBorder(BorderFactory.createLineBorder(c));
+        jTextField2.addKeyListener(new KeyAdapter() {//Este campo es de solo texto y por lo tanto no es permitido caractenes numericos, se bloquea el teclado numerico para que el usuario no pueda ingresar numeros
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c;
+                c = e.getKeyChar();
+                if ((c < 'A' || c > 'Z' == c < 'a' || c > 'z')) {
+                    e.consume();
+                }
+            }
+        });
+
+        jComboBox1.removeAllItems();
+        jComboBox1.addItem("Seleccione");
+        listaMaterias = MateriaDao.listaMaterias;
+        for (int i = 0; i<listaMaterias.size(); i++) {
+            jComboBox1.addItem(listaMaterias.get(i).getNombre());
+        }
+
         jComboBox1.setBorder(BorderFactory.createLineBorder(c));
-        
+
         jButton1.setMnemonic(KeyEvent.VK_G);
         jButton2.setMnemonic(KeyEvent.VK_B);
         jButton3.setMnemonic(KeyEvent.VK_A);
@@ -184,6 +231,11 @@ public class ProfesorForm extends javax.swing.JFrame {
         jButton1.setActionCommand("");
         jButton1.setAlignmentY(0.0F);
         jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jButton1MousePressed(evt);
+            }
+        });
 
         jButton2.setText("Buscar");
         jButton2.setActionCommand("");
@@ -319,12 +371,16 @@ public class ProfesorForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1MouseDragged
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
-       System.exit(0); //Cambiar por icono de bandeja
+        System.exit(0); //Cambiar por icono de bandeja
     }//GEN-LAST:event_jLabel2MouseClicked
 
     private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
         setExtendedState(JFrame.ICONIFIED);
     }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jButton1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MousePressed
+        Guardar();
+    }//GEN-LAST:event_jButton1MousePressed
 
     /**
      * @param args the command line arguments
@@ -337,11 +393,7 @@ public class ProfesorForm extends javax.swing.JFrame {
             }
         });
     }
-    
-    public void guardar(){
-        
-        UM.crearProfesor(numeroDocumento, nombres, mat);
-    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -366,4 +418,90 @@ public class ProfesorForm extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public boolean ValidarCampos() {
+        boolean resp = false;
+        Validaciones validaciones = new Validaciones();
+
+        numeroDocumento = jTextField1.getText();
+        nombres = jTextField2.getText();
+        nombreMateria = (String) jComboBox1.getSelectedItem();
+        resolveMateria();
+
+        if (validaciones.campoVacio(numeroDocumento) == false) {
+            JOptionPane.showMessageDialog(this, "El campo numero de documento es obligatorio", "Campo numero documento (Obligatorio)", JOptionPane.ERROR_MESSAGE, icoError);
+            jTextField1.isFocusable();
+        } else if (numeroDocumento.length() <= 8 || numeroDocumento.length() >= 20) {
+            JOptionPane.showMessageDialog(this, "El campo numero de documento tiene una longitud minima de 8 caracteres y maximo de 20", "Campo numero documento (Obligatorio)", JOptionPane.WARNING_MESSAGE, icoAdvertencia);
+            jTextField1.isFocusable();
+        } else if (nombres.equals("")) {
+            JOptionPane.showMessageDialog(this, "El campo nombres es obligatorio", "Campo nombres (Obligatorio)", JOptionPane.ERROR_MESSAGE, icoError);
+            jTextField2.isFocusable();
+        } else if (nombres.length() <= 10 || numeroDocumento.length() >= 50) {
+            JOptionPane.showMessageDialog(this, "El campo nombres tiene una longitud minima de 10 caracteres y maximo de 50", "Campo nombres (Obligatorio)", JOptionPane.WARNING_MESSAGE, icoAdvertencia);
+            jTextField2.isFocusable();
+        } else if (nombreMateria.equals("Seleccione")) {
+            JOptionPane.showMessageDialog(this, "Por favor seleccione una materia de la lista", "Campo materia (Obligatorio)", JOptionPane.ERROR_MESSAGE, icoError);
+            jTextField2.isFocusable();
+        } else if (!nombreMateria.equals("Seleccione")) {
+            resp = true;
+        }
+        return resp;
+    }
+
+    private void resolveMateria() {
+        materia = UM.buscarMateria(nombreMateria);
+    }
+
+    @Override
+    public void Guardar() {
+        if (ValidarCampos() == true) {
+            profesor = UM.buscarProfesor(numeroDocumento);
+            if (profesor.getNumeroDocumento().equals(numeroDocumento)) {
+                JOptionPane.showMessageDialog(this, "El Profesor ya existe en el sistema", "Error", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                resolveMateria();
+                UM.crearProfesor(numeroDocumento, nombres, materia);
+                if (profesor.getNumeroDocumento().equals(numeroDocumento)) {
+                    JOptionPane.showMessageDialog(this, "El Profesor ha sido guardadó", "Operación exitosa", JOptionPane.INFORMATION_MESSAGE);
+                    Limpiar();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void Buscar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void Modificar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void Eliminar() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void Limpiar() {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jComboBox1.setSelectedIndex(0);
+    }
+
+    @Override
+    public void CerrarS() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void Cancelar() {
+        UniversidadForm universidadForm = new UniversidadForm();
+        this.setVisible(false);
+        universidadForm.setVisible(true);
+    }
 }
